@@ -1048,13 +1048,18 @@ function SpawnerManager:spawnMob(spawnerData, level, partyCount, customPosition)
 	humanoid.HealthChanged:Connect(function(newHealth)
 		if newHealth < lastHealth and newHealth > 0 then
 			local damageDealt = math.floor(lastHealth - newHealth)
+			print(string.format("[DM] Enemy took %.1f damage! (HP: %.1f -> %.1f)", damageDealt, lastHealth, newHealth))
+
 			-- Show damage number above enemy
 			if DamageNumbers and DamageNumbers.Show then
+				print("[DM] Calling DamageNumbers.Show for enemy...")
 				local success, err = pcall(function()
 					DamageNumbers.Show(mob, damageDealt, false)
 				end)
 				if not success then
 					warn("[DM] Failed to show damage numbers:", err)
+				else
+					print("[DM] Damage number created successfully!")
 				end
 			else
 				warn("[DM] DamageNumbers.Show not available!")
