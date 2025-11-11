@@ -19,7 +19,7 @@ local Fireball = {}
 local VALID_RARITIES = {"Common","Uncommon","Rare","Epic","Legendary","Mythic"}
 
 -- Projectile enemy hitbox radius (visual stays small)
-local HITBOX_RADIUS = 2.6   -- try 2.6–3.2 if you want even chunkier hits
+local HITBOX_RADIUS = 2.6   -- try 2.6ï¿½3.2 if you want even chunkier hits
 
 local activeProjectiles = {}
 
@@ -148,7 +148,10 @@ local function explode(position, p, casterChar, player)
 				hitTargets[enemyChar] = true
 				local eh = enemyChar:FindFirstChildOfClass("Humanoid")
 				if eh and eh.Health > 0 then
+					print(string.format("[Fireball] Hitting %s for %.1f damage (HP before: %.1f/%.1f)",
+						enemyChar.Name, p.damage, eh.Health, eh.MaxHealth))
 					eh:TakeDamage(p.damage)
+					print(string.format("[Fireball] Enemy HP after: %.1f/%.1f", eh.Health, eh.MaxHealth))
 					local er = enemyChar:FindFirstChild("HumanoidRootPart")
 					if er then
 						local dir = (er.Position - position)
