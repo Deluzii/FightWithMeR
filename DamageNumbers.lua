@@ -32,7 +32,9 @@ function DamageNumbers.Show(enemy, damage, isCrit)
 	billboard.Size = UDim2.new(0, 200, 0, 50)
 	billboard.StudsOffset = Vector3.new(randomX, 3, randomZ)
 	billboard.AlwaysOnTop = true
-	billboard.Parent = attachPart
+	billboard.Parent = game.Workspace  -- Parent to workspace for proper replication
+
+	print(string.format("[DamageNumbers] Created billboard for %s, damage: %s", enemy.Name, damage))
 
 	-- Format damage
 	local damageText
