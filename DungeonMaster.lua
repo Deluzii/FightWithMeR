@@ -28,6 +28,13 @@ local PhysicsService = game:GetService("PhysicsService")
 local DropManager = require(ServerScriptService:WaitForChild("DropManager"))
 local DamageNumbers = require(ServerScriptService:WaitForChild("DamageNumbers"))
 
+-- Verify DamageNumbers module loaded successfully
+if DamageNumbers and DamageNumbers.Show then
+	print("[DM] DamageNumbers module loaded successfully!")
+else
+	warn("[DM] WARNING: DamageNumbers module failed to load or missing Show function!")
+end
+
 -- === Boss Exit Remotes / Signals ===
 local Remotes = ReplicatedStorage:FindFirstChild("Remotes") or Instance.new("Folder")
 Remotes.Name = "Remotes"
@@ -1042,10 +1049,16 @@ function SpawnerManager:spawnMob(spawnerData, level, partyCount, customPosition)
 		if newHealth < lastHealth and newHealth > 0 then
 			local damageDealt = math.floor(lastHealth - newHealth)
 			-- Show damage number above enemy
-			pcall(function()
-				DamageNumbers.Show(mob, damageDealt, false)
-
-			end)
+			if DamageNumbers and DamageNumbers.Show then
+				local success, err = pcall(function()
+					DamageNumbers.Show(mob, damageDealt, false)
+				end)
+				if not success then
+					warn("[DM] Failed to show damage numbers:", err)
+				end
+			else
+				warn("[DM] DamageNumbers.Show not available!")
+			end
 		end
 		lastHealth = newHealth
 	end)
@@ -1255,9 +1268,14 @@ function SpawnerManager:performAttack(mob, aiData, targetHRP, targetHumanoid)
 			targetHumanoid:TakeDamage(damage)
 
 			-- Show damage number above player
-			pcall(function()
-				DamageNumbers.Show(aiData.target, damage, false)
-			end)
+			if DamageNumbers and DamageNumbers.Show then
+				local success, err = pcall(function()
+					DamageNumbers.Show(aiData.target, damage, false)
+				end)
+				if not success then
+					warn("[DM] Failed to show damage number on player:", err)
+				end
+			end
 		end
 	end
 
